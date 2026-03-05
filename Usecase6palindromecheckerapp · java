@@ -1,0 +1,47 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+/**
+ * UC6: Queue + Stack Based Palindrome Check
+ * Goal: Demonstrate FIFO vs LIFO using Queue and Stack.
+ * Data Structures: Queue (FIFO), Stack (LIFO)
+ */
+public class UseCase6PalindromeCheckerApp {
+
+    public static boolean isPalindrome(String str) {
+        Queue<Character> queue = new LinkedList<>();
+        Stack<Character> stack = new Stack<>();
+
+        // Enqueue and push all characters
+        for (char c : str.toCharArray()) {
+            queue.add(c);   // FIFO: enqueue
+            stack.push(c);  // LIFO: push
+        }
+
+        // Compare dequeue (original order) vs pop (reverse order)
+        while (!queue.isEmpty()) {
+            char fromQueue = queue.poll();  // removes from front (FIFO)
+            char fromStack = stack.pop();   // removes from top (LIFO)
+            if (fromQueue != fromStack) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to check (UC6 - Queue + Stack): ");
+        String input = scanner.nextLine();
+
+        if (isPalindrome(input)) {
+            System.out.println("\"" + input + "\" is a Palindrome.");
+        } else {
+            System.out.println("\"" + input + "\" is NOT a Palindrome.");
+        }
+
+        scanner.close();
+    }
+}
