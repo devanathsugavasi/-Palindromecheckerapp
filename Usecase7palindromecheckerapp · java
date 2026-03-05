@@ -1,0 +1,44 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Scanner;
+
+/**
+ * UC7: Deque-Based Optimized Palindrome Checker
+ * Goal: Use Deque to compare front and rear elements.
+ * Data Structure: Deque (Double Ended Queue)
+ */
+public class UseCase7PalindromeCheckerApp {
+
+    public static boolean isPalindrome(String str) {
+        Deque<Character> deque = new ArrayDeque<>();
+
+        // Insert all characters into deque
+        for (char c : str.toCharArray()) {
+            deque.addLast(c);
+        }
+
+        // Remove first & last and compare until deque has 1 or 0 elements
+        while (deque.size() > 1) {
+            char first = deque.pollFirst();  // remove from front
+            char last = deque.pollLast();    // remove from rear
+            if (first != last) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to check (UC7 - Deque): ");
+        String input = scanner.nextLine();
+
+        if (isPalindrome(input)) {
+            System.out.println("\"" + input + "\" is a Palindrome.");
+        } else {
+            System.out.println("\"" + input + "\" is NOT a Palindrome.");
+        }
+
+        scanner.close();
+    }
+}
