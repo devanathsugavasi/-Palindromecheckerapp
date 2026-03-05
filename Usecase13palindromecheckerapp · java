@@ -1,0 +1,111 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+/**
+ * UC13: Performance Comparison
+ * Goal: Compare the performance of different palindrome approaches.
+ * Key Concepts: System.nanoTime(), Algorithm comparison
+ */
+public class UseCase13PalindromeCheckerApp {
+
+    // UC4: Char Array Two-Pointer
+    static boolean charArrayCheck(String str) {
+        char[] chars = str.toCharArray();
+        int start = 0, end = chars.length - 1;
+        while (start < end) {
+            if (chars[start++] != chars[end--]) return false;
+        }
+        return true;
+    }
+
+    // UC5: Stack-based
+    static boolean stackCheck(String str) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) stack.push(c);
+        for (char c : str.toCharArray()) {
+            if (c != stack.pop()) return false;
+        }
+        return true;
+    }
+
+    // UC6: Queue + Stack
+    static boolean queueStackCheck(String str) {
+        Queue<Character> queue = new LinkedList<>();
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            queue.add(c);
+            stack.push(c);
+        }
+        while (!queue.isEmpty()) {
+            if (queue.poll() != stack.pop()) return false;
+        }
+        return true;
+    }
+
+    // UC7: Deque
+    static boolean dequeCheck(String str) {
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char c : str.toCharArray()) deque.addLast(c);
+        while (deque.size() > 1) {
+            if (deque.pollFirst() != deque.pollLast()) return false;
+        }
+        return true;
+    }
+
+    // UC9: Recursive
+    static boolean recursiveCheck(String str, int start, int end) {
+        if (start >= end) return true;
+        if (str.charAt(start) != str.charAt(end)) return false;
+        return recursiveCheck(str, start + 1, end - 1);
+    }
+
+    // UC10: Normalized (case + space ignored)
+    static boolean normalizedCheck(String str) {
+        String normalized = str.toLowerCase().replaceAll("[^a-z0-9]", "");
+        int start = 0, end = normalized.length() - 1;
+        while (start < end) {
+            if (normalized.charAt(start++) != normalized.charAt(end--)) return false;
+        }
+        return true;
+    }
+
+    static void benchmark(String name, Runnable task, int iterations) {
+        long start = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            task.run();
+        }
+        long end = System.nanoTime();
+        long totalNs = end - start;
+        System.out.printf("%-35s | Total: %,10d ns | Avg: %,8d ns%n",
+                name, totalNs, totalNs / iterations);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to benchmark (UC13 - Performance): ");
+        String input = scanner.nextLine();
+
+        int iterations = 100_000;
+
+        System.out.println("\n========== Performance Comparison (" + iterations + " iterations) ==========");
+        System.out.printf("%-35s | %-20s | %-15s%n", "Algorithm", "Total Time (ns)", "Avg Time (ns)");
+        System.out.println("-".repeat(75));
+
+        benchmark("UC4  - Char Array (Two-Pointer)", () -> charArrayCheck(input), iterations);
+        benchmark("UC5  - Stack Based",              () -> stackCheck(input), iterations);
+        benchmark("UC6  - Queue + Stack",            () -> queueStackCheck(input), iterations);
+        benchmark("UC7  - Deque Based",              () -> dequeCheck(input), iterations);
+        benchmark("UC9  - Recursive",                () -> recursiveCheck(input, 0, input.length() - 1), iterations);
+        benchmark("UC10 - Normalized (Case+Space)",  () -> normalizedCheck(input), iterations);
+
+        System.out.println("-".repeat(75));
+        System.out.println("\nInput: \"" + input + "\"");
+        System.out.println("Is Palindrome: " + charArrayCheck(input));
+
+        scanner.close();
+    }
+}
