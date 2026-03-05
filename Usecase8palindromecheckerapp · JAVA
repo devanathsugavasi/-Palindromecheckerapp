@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+/**
+ * UC8: Linked List Based Palindrome Checker
+ * Goal: Check palindrome using singly linked list.
+ * Data Structure: Singly Linked List
+ */
+public class UseCase8PalindromeCheckerApp {
+
+    // Node class for singly linked list
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Build linked list from string
+    public static Node buildLinkedList(String str) {
+        Node head = null, tail = null;
+        for (char c : str.toCharArray()) {
+            Node newNode = new Node(c);
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+        return head;
+    }
+
+    // Find middle using fast & slow pointer
+    public static Node findMiddle(Node head) {
+        Node slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    // Reverse a linked list in-place
+    public static Node reverse(Node head) {
+        Node prev = null, curr = head;
+        while (curr != null) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    public static boolean isPalindrome(String str) {
+        Node head = buildLinkedList(str);
+
+        // Find middle of linked list
+        Node middle = findMiddle(head);
+
+        // Reverse second half
+        Node secondHalf = reverse(middle);
+
+        // Compare first half and reversed second half
+        Node p1 = head, p2 = secondHalf;
+        while (p2 != null) {
+            if (p1.data != p2.data) {
+                return false;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to check (UC8 - Linked List): ");
+        String input = scanner.nextLine();
+
+        if (isPalindrome(input)) {
+            System.out.println("\"" + input + "\" is a Palindrome.");
+        } else {
+            System.out.println("\"" + input + "\" is NOT a Palindrome.");
+        }
+
+        scanner.close();
+    }
+}
