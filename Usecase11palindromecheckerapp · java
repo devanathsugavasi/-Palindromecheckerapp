@@ -1,0 +1,66 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+/**
+ * UC11: Object-Oriented Palindrome Service
+ * Goal: Encapsulate palindrome logic in a class.
+ * Key Concepts: Encapsulation, Single Responsibility Principle
+ * Data Structure: Internal (Stack / Array)
+ */
+
+// PalindromeChecker class encapsulating palindrome logic
+class PalindromeChecker {
+
+    // Method using Stack internally
+    public boolean checkPalindrome(String str) {
+        Stack<Character> stack = new Stack<>();
+        char[] chars = str.toCharArray();
+
+        // Push all characters into stack
+        for (char c : chars) {
+            stack.push(c);
+        }
+
+        // Pop and compare with original
+        for (char c : chars) {
+            if (c != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Method with case and space normalization
+    public boolean checkPalindromeNormalized(String str) {
+        String normalized = str.toLowerCase().replaceAll("[^a-z0-9]", "");
+        return checkPalindrome(normalized);
+    }
+}
+
+public class UseCase11PalindromeCheckerApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        PalindromeChecker checker = new PalindromeChecker();
+
+        System.out.print("Enter a string to check (UC11 - OOP Service): ");
+        String input = scanner.nextLine();
+
+        if (checker.checkPalindrome(input)) {
+            System.out.println("\"" + input + "\" is a Palindrome.");
+        } else {
+            System.out.println("\"" + input + "\" is NOT a Palindrome.");
+        }
+
+        System.out.print("\nEnter a phrase (spaces & case ignored): ");
+        String phrase = scanner.nextLine();
+
+        if (checker.checkPalindromeNormalized(phrase)) {
+            System.out.println("\"" + phrase + "\" is a Palindrome (normalized).");
+        } else {
+            System.out.println("\"" + phrase + "\" is NOT a Palindrome.");
+        }
+
+        scanner.close();
+    }
+}
